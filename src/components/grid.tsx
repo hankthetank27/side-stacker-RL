@@ -1,21 +1,23 @@
 import { useEffect, useState } from 'react';
 import { Row } from './row'
+import './grid.css'
 
 export const Grid = () => {
 
-  const [ gameStarted, setGameStared ] = useState(false)
-  const [ grid, setGrid ] = useState(new Array(7).fill('_').map(x => new Array(7).fill('_')))
-  const [ turn, setTurn ] = useState<'X'|'O'>('X')
+  const [ grid, setGrid ] = useState<string[][]>(new Array(7).fill('_').map(x => new Array(7).fill('_')))
+  const [ gameStarted, setGameStared ] = useState<boolean>(false)
+  const [ currentPlayer, setCurrentPlayer ] = useState<'X'|'O'>('X')
+  const [ winner, setWinner ] = useState<null | string>(null)
+  const [ gameOver, setGameOver ] = useState<boolean>(false)
 
   useEffect(() => {
     if (!gameStarted) return
-
-    turn === 'X'
-      ? setTurn('O')
-      : setTurn('X')
-
-    if (checkWinner(grid, turn)){
-      console.log(`${turn} wins`)
+    currentPlayer === 'X'
+      ? setCurrentPlayer('O')
+      : setCurrentPlayer('X')
+    if (checkWinner(grid, currentPlayer)){
+      setWinner(currentPlayer)
+      setGameOver(true)
     }
   }, [ grid ])
 
@@ -28,11 +30,11 @@ export const Grid = () => {
 
     const makeDirection = (rowAdjust: number, colAdjust: number) => {
       const checkDirection = (row: number, col: number, streak: number): boolean => {
-        if (notValidElement(row, col)) return false
         if (streak === 4) return true
+        if (notValidElement(row, col)) return false
         return grid[row][col] === currentPlayer
           ? checkDirection(row + rowAdjust, col + colAdjust, streak + 1)
-          : checkDirection(row + rowAdjust, col +  colAdjust, 0)
+          : checkDirection(row + rowAdjust, col + colAdjust, 0)
       }
       return checkDirection;
     }
@@ -59,9 +61,10 @@ export const Grid = () => {
   for (let i = 0; i < 7; i++){
     rows.push(
       <Row
+        gameOver={gameOver}
         gameStarted={gameStarted}
         setGameStared={setGameStared}
-        turn={turn} 
+        currentPlayer={currentPlayer} 
         grid={grid} 
         setGrid={setGrid} 
         rowId={i} 
@@ -72,7 +75,14 @@ export const Grid = () => {
   return (
     <div className='grid'>
       <div className='rowsContiner'>
-        { turn === 'X' ? 'Player 1 turn' : 'Player 2 turn' }
+        <h3 className='playerUp'>
+          {gameOver
+            ? `${winner} wins the match!`
+            : currentPlayer === 'X' 
+            ? 'X to move'
+            : 'O to move'
+          }
+        </h3>
         { rows }
       </div>
     </div>

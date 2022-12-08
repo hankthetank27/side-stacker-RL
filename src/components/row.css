@@ -1,5 +1,8 @@
 .row{
-    border: 1px solid green;
     display: flex;
     flex-direction: row;
+}
+
+.button{
+    width: 140px
 }

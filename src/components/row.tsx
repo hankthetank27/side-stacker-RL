@@ -1,34 +1,39 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { Box } from './box';
 import './row.css'
 
 interface Props {
-  rowId: number
-  setGameStared: Dispatch<SetStateAction<boolean>>
-  gameStarted: boolean
-  setGrid: Dispatch<SetStateAction<string[][]>>
   grid: string[][]
-  turn: 'X' | 'O'
+  setGrid: Dispatch<SetStateAction<string[][]>>
+  currentPlayer: 'X' | 'O'
+  gameStarted: boolean
+  setGameStared: Dispatch<SetStateAction<boolean>>
+  rowId: number
+  gameOver: boolean
 }
 
-export const Row = ({ turn, rowId, setGrid, grid, setGameStared, gameStarted }: Props) => {
+export const Row = ({ gameOver, currentPlayer, rowId, setGrid, grid, setGameStared, gameStarted }: Props) => {
+
+  const [ rowFull, setRowFull ] = useState<boolean>(false);
 
   const makeAdder = (idx: number, direction: number) => {
     return () => {
       if (!gameStarted) setGameStared(true)
-      
       const row = grid[rowId]
       while(row[idx] !== '_'){
-        if (idx < 0 || idx >= grid.length) return 'handle row full'
+        if (idx < 0 || idx >= grid.length) return;
         idx += direction
       }
       setGrid((grid) => 
         grid.map((row, i) => 
           i === rowId
-            ? row.map((el, j) => j === idx ? turn : el)
+            ? row.map((el, j) => j === idx ? currentPlayer : el)
             : row
         )
       )
+      if (idx + direction >= grid.length || idx + direction < 0){
+        return setRowFull(true);
+      }
     }
   }
 
@@ -47,9 +52,17 @@ export const Row = ({ turn, rowId, setGrid, grid, setGameStared, gameStarted }: 
 
   return (
     <div className='row'>
-      <button onClick={addLeft}> Add Left </button>
+      <button 
+        className='button' 
+        onClick={addLeft} 
+        disabled={gameOver || rowFull}
+      >Add Left</button>
       { boxes }
-      <button onClick={addRight}> Add Right </button>
+      <button 
+        className='button' 
+        onClick={addRight} 
+        disabled={gameOver || rowFull}
+      >Add Right</button>
     </div>
   )
 }
