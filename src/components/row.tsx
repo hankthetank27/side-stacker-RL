@@ -4,33 +4,44 @@ import './row.css'
 
 interface Props {
   grid: string[][]
-  setGrid: Dispatch<SetStateAction<string[][]>>
   currentPlayer: 'X' | 'O'
-  setCurrentPlayer: Dispatch<SetStateAction<'X'|'O'>>
-  gameStarted: boolean
-  setGameStared: Dispatch<SetStateAction<boolean>>
   rowId: number
   gameOver: boolean
   socket: any
+  room: null | string
+  playerId: string
+  currentTurn: string
+  gameStarted: boolean
+  setGrid: Dispatch<SetStateAction<string[][]>>
   setWinner: Dispatch<SetStateAction<null | string>>
   setGameOver: Dispatch<SetStateAction<boolean>>
-  room: null | string
+  setCurrentPlayer: Dispatch<SetStateAction<'X'|'O'>>
+  setCurrentTurn: Dispatch<SetStateAction<string>>
 }
 
-export const Row = ({ room, setWinner, setGameOver, socket, gameOver, currentPlayer, setCurrentPlayer, rowId, setGrid, grid, setGameStared, gameStarted }: Props) => {
+export const Row = ({
+  setCurrentTurn,
+  currentTurn, 
+  playerId, 
+  room, 
+  setWinner, 
+  setGameOver, 
+  socket, 
+  gameOver, 
+  currentPlayer, 
+  setCurrentPlayer, 
+  rowId, setGrid, 
+  grid,  
+  gameStarted 
+}: Props) => {
 
-  const [ rowFull, setRowFull ] = useState<boolean>(false);
 
   const makeAdder = (idx: number, direction: number) => {
     return () => {
-      if (!gameStarted) setGameStared(true)
       const row = grid[rowId]
       while(row[idx] !== '_'){
         if (idx < 0 || idx >= grid.length) return;
         idx += direction
-      }
-      if (idx + direction >= grid.length || idx + direction < 0){
-        setRowFull(true);
       }
       const newGrid = grid.map((row, i) => 
         i === rowId
@@ -47,10 +58,15 @@ export const Row = ({ room, setWinner, setGameOver, socket, gameOver, currentPla
       setWinner(currentPlayer)
       setGameOver(true)
       socket.emit('game-over', newGrid, currentPlayer, room)
+    } else if (checkTie(newGrid)) {
+      setWinner('No one')
+      setGameOver(true)
+      socket.emit('game-over', newGrid, currentPlayer, room)
     } else {
       const nextPlayer = currentPlayer === 'X' ? 'O' : 'X'
       setCurrentPlayer(nextPlayer)
-      socket.emit('make-move', newGrid, nextPlayer, room)
+      setCurrentTurn('');
+      socket.emit('make-move', newGrid, nextPlayer ,room)
     }
   }
 
@@ -90,6 +106,15 @@ export const Row = ({ room, setWinner, setGameOver, socket, gameOver, currentPla
     return false
   }
 
+  const checkTie = (grid: string[][]) => {
+    for (const row of grid){
+      for (const col of row){
+        if (col === '_') return false;
+      }
+    }
+    return true;
+  }
+
   const addLeft = makeAdder(0, 1)
   const addRight = makeAdder(grid.length - 1, -1)
 
@@ -108,13 +133,23 @@ export const Row = ({ room, setWinner, setGameOver, socket, gameOver, currentPla
       <button 
         className='button' 
         onClick={addLeft} 
-        disabled={gameOver || rowFull || !room}
+        disabled={
+          !gameStarted ||
+          gameOver || 
+          !room || 
+          currentTurn != playerId
+        }
       >Add Left</button>
       { boxes }
       <button 
         className='button' 
         onClick={addRight} 
-        disabled={gameOver || rowFull || !room}
+        disabled={
+          !gameStarted ||
+          gameOver || 
+          !room || 
+          currentTurn != playerId
+        }
       >Add Right</button>
     </div>
   )

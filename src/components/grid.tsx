@@ -1,18 +1,30 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Row } from './row'
 import './grid.css'
 
-//FIX TYPE
+
 interface Props{
+  grid: string[][]
   socket: any
   isConnected: boolean
   room: null | string
+  playerId: string
+  currentTurn: string
+  gameStarted: boolean
+  setGameStarted: Dispatch<SetStateAction<boolean>>
+  setCurrentTurn: Dispatch<SetStateAction<string>>
+  setGrid: Dispatch<SetStateAction<string[][]>>
 }
 
-export const Grid = ({ room, socket, isConnected }: Props) => {
+export const Grid = ({
+  gameStarted, 
+  grid,setGrid ,playerId, 
+  currentTurn, 
+  setCurrentTurn, 
+  room, socket, 
+  isConnected 
+}: Props) => {
 
-  const [ grid, setGrid ] = useState<string[][]>(new Array(7).fill('_').map(x => new Array(7).fill('_')))
-  const [ gameStarted, setGameStared ] = useState<boolean>(false)
   const [ currentPlayer, setCurrentPlayer ] = useState<'X'|'O'>('X')
   const [ winner, setWinner ] = useState<null | string>(null)
   const [ gameOver, setGameOver ] = useState<boolean>(false)
@@ -20,9 +32,10 @@ export const Grid = ({ room, socket, isConnected }: Props) => {
   useEffect(() => {
     if (isConnected) {
 
-      socket.on('receive-move', (newGrid: string[][], nextPlayer: 'X'|'O') => {
+      socket.on('receive-move', (newGrid: string[][], nextPlayer: 'X'|'O', player: string) => {
         setGrid(newGrid)
         setCurrentPlayer(nextPlayer)
+        setCurrentTurn(player)
       })
 
       socket.on('receive-game-over', (newGrid: string[][], winner: string) => {
@@ -40,7 +53,6 @@ export const Grid = ({ room, socket, isConnected }: Props) => {
       <Row
         gameOver={gameOver}
         gameStarted={gameStarted}
-        setGameStared={setGameStared}
         currentPlayer={currentPlayer}
         setCurrentPlayer={setCurrentPlayer}
         grid={grid} 
@@ -51,6 +63,9 @@ export const Grid = ({ room, socket, isConnected }: Props) => {
         setWinner={setWinner}
         setGameOver={setGameOver}
         room={room}
+        playerId={playerId}
+        currentTurn={currentTurn}
+        setCurrentTurn={setCurrentTurn}
     />)
   }
 
@@ -62,6 +77,8 @@ export const Grid = ({ room, socket, isConnected }: Props) => {
             ? `${winner} wins the match!`
             : !room
             ? 'Join room to start'
+            : !gameStarted
+            ? 'Waiting for other player to join...'
             : currentPlayer === 'X' 
             ? 'X to move'
             : 'O to move'
