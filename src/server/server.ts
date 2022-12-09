@@ -1,11 +1,11 @@
-import express, { Request, Response, NextFunction } from 'express'
+import express, { Request, Response } from 'express'
 import { Server } from 'socket.io'
 import { fileURLToPath } from 'url';
 import { createServer } from 'http'
 import path from 'path'
 import cors from 'cors'
-import { ExpressError, RoomData } from '../@types';
 import pg from 'pg'
+import { RoomData } from '../@types';
 
 const { Pool } = pg
 const PORT = process.env.PORT || 3000
@@ -23,7 +23,6 @@ const io = new Server(server, {
 const db = new Pool({
   connectionString: 'postgres://vjtvwlqe:anDo7eaCh4AGYWvo586XOTZrLgDlnjvs@rajje.db.elephantsql.com/vjtvwlqe'
 })
-
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -116,18 +115,6 @@ io.on('connection', (socket: any) => {
 })
 
 app.use((req: Request, res: Response) => res.status(404).send('page not found'));
-
-//global error handler
-app.use((err: ExpressError, req: Request, res: Response, next: NextFunction) => {
-  const defaultErr = {
-    log: 'Express error handler caught unknown middleware error',
-    status: 500,
-    message: { err: 'An error occurred' },
-  };
-  const errorObj = Object.assign({}, defaultErr, err);
-  console.log(errorObj.log);
-  return res.status(errorObj.status).json(errorObj.message);
-});
 
 server.listen(PORT, () => {
   console.log(`Server listening on port: ${PORT}.`)
