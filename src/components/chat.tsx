@@ -26,9 +26,9 @@ export const Chat = ({
   const [ chatHistory, setChatHistory ] = useState<string[][]>([])
 
   useEffect(() => {
-      const callback = ([messageId, message]: string[]) => {
+      const callback = (message: string[]) => {
         setChatHistory(prevHistory => {
-          return [...prevHistory, [messageId, message]]
+          return [...prevHistory, message]
         })
       }
 
@@ -57,7 +57,7 @@ export const Chat = ({
             <div>
               { messageId === playerId
                 ?<div className="myMessage"><span>{message}</span></div>
-                :<div className="oppMessage"><span>{message}</span></div>
+                :<div className="opMessage"><span>{message}</span></div>
               }
             </div>
           )
