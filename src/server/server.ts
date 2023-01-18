@@ -43,7 +43,7 @@ if (process.env.NODE_ENV === 'production') {
 
 //postgres queries
 const getRoomData = async (room: string, player: string, grid: string[][]) => {
-  try{
+  try {
     const query = `
       UPDATE rooms
       SET playerY = $1
@@ -111,6 +111,10 @@ io.on('connection', (socket: any) => {
   socket.on('game-over', async (grid: string[][], winner: string, room: string) => {
     await insertMoveData(room, grid, winner)
     socket.to(room).emit('receive-game-over', grid, winner);
+  })
+
+  socket.on('chat-message', async (message: string[], room: string) => {
+    socket.to(room).emit('receive-chat-message', message)
   })
 })
 

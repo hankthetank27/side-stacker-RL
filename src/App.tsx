@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Grid } from './components/grid'
+import { Chat } from './components/chat'
 import { RoomData } from './@types' 
 import './App.css'
 import io from 'socket.io-client'
@@ -10,10 +11,10 @@ function App() {
   const socket = useRef(io('http://localhost:3000/')).current
 
   const [ gameStarted, setGameStarted ] = useState<boolean>(false)
-  const [ grid, setGrid ] = useState<string[][]>(new Array(7).fill('_').map(x => new Array(7).fill('_')))
+  const [ grid, setGrid ] = useState<string[][]>(new Array(7).fill('_').map(_ => new Array(7).fill('_')))
   const [ isConnected, setIsConnected ] = useState(socket.connected)
   const [ room, setRoom ] = useState<null | string>(null)
-  const [ handleChange, setHandleChange ] = useState('')
+  const [ handleChange, setHandleChange ] = useState<string>('')
   const [ playerId, setPlayerId ] = useState<string>('');
   const [ currentTurn, setCurrentTurn ] = useState<string>('');
 
@@ -75,6 +76,22 @@ function App() {
           ? 'You are not currently in a room'
           : `In room: ${room}`}
       </div>
+      { 
+        gameStarted
+          ? <Chat
+              gameStarted={gameStarted}
+              setGameStarted={setGameStarted}
+              grid={grid}
+              setGrid={setGrid}
+              socket={socket}
+              isConnected={isConnected}
+              room={room}
+              playerId={playerId}
+              currentTurn={currentTurn}
+              setCurrentTurn={setCurrentTurn}
+            />
+          : null
+      }
     </div>
   )
 }
