@@ -93,9 +93,9 @@ export const Grid = ({
           }
         </h3>
           <div className='newGameContainer'>
-            { gameOver
-                ? <button onClick={() => socket.emit('new-game', winner, room)}>Play Again?</button>
-                : null
+            {gameOver
+              ? <button onClick={() => socket.emit('new-game', winner, room)}>Play Again?</button>
+              : null
             }
           </div>
         { rows }

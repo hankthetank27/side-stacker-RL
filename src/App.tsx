@@ -5,7 +5,6 @@ import { RoomData } from './@types'
 import './App.css'
 import io from 'socket.io-client'
 
-
 function App() {
 
   const socket = useRef(io('http://localhost:3000/')).current
@@ -76,21 +75,14 @@ function App() {
           ? 'You are not currently in a room'
           : `In room: ${room}`}
       </div>
-      { 
-        gameStarted
-          ? <Chat
-              gameStarted={gameStarted}
-              setGameStarted={setGameStarted}
-              grid={grid}
-              setGrid={setGrid}
-              socket={socket}
-              isConnected={isConnected}
-              room={room}
-              playerId={playerId}
-              currentTurn={currentTurn}
-              setCurrentTurn={setCurrentTurn}
-            />
-          : null
+      {gameStarted
+        ? <Chat
+            socket={socket}
+            isConnected={isConnected}
+            room={room}
+            playerId={playerId}
+          />
+        : null
       }
     </div>
   )

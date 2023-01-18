@@ -1,17 +1,11 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import './chat.css'
 
 interface Props{
-  grid: string[][]
   socket: any
   isConnected: boolean
   room: null | string
   playerId: string
-  currentTurn: string
-  gameStarted: boolean
-  setGameStarted: Dispatch<SetStateAction<boolean>>
-  setCurrentTurn: Dispatch<SetStateAction<string>>
-  setGrid: Dispatch<SetStateAction<string[][]>>
 }
 
 export const Chat = ({
@@ -22,6 +16,7 @@ export const Chat = ({
 }: Props) => {
 
   const chatContentsEl = useRef<HTMLDivElement>(null)
+
   const [ handleChange, setHandleChange ] = useState<string>('')
   const [ chatHistory, setChatHistory ] = useState<string[][]>([])
 
@@ -56,8 +51,8 @@ export const Chat = ({
           return (
             <div>
               { messageId === playerId
-                ?<div className="myMessage"><span>{message}</span></div>
-                :<div className="opMessage"><span>{message}</span></div>
+                ? <div className="myMessage"><span>{message}</span></div>
+                : <div className="opMessage"><span>{message}</span></div>
               }
             </div>
           )

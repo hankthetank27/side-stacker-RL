@@ -1,5 +1,5 @@
 .chatContainer {
-    border: 1px solid red;
+    border: 3px solid rgba(255, 38, 0, 0.445);
     border-radius: 3px;
     display: flex;
     justify-content: space-between;
@@ -7,7 +7,7 @@
     flex-direction: column;
     width: 500px;
     height: 300px;
-    overflow: hidden;
+    /* overflow: hidden; */
     padding-top: 10px;
 }
 
@@ -16,11 +16,11 @@
 }
 
 .chatContents{
-    border: 1px solid red;
+    border: 3px solid rgba(255, 38, 0, 0.445);
     border-radius: 3px;
     width: 480px;
     height: 250px;
-    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .myMessage {
