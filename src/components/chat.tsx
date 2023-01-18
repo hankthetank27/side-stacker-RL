@@ -1,4 +1,5 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
+import './chat.css'
 
 interface Props{
   grid: string[][]
@@ -14,24 +15,19 @@ interface Props{
 }
 
 export const Chat = ({
-  gameStarted, 
-  grid,
-  setGrid,
   playerId, 
-  currentTurn, 
-  setCurrentTurn, 
   room, 
   socket, 
   isConnected 
 }: Props) => {
 
+  const chatContentsEl = useRef<HTMLDivElement>(null)
   const [ handleChange, setHandleChange ] = useState<string>('')
   const [ chatHistory, setChatHistory ] = useState<string[][]>([])
 
   useEffect(() => {
       const callback = ([messageId, message]: string[]) => {
         setChatHistory(prevHistory => {
-          console.log(prevHistory)
           return [...prevHistory, [messageId, message]]
         })
       }
@@ -42,21 +38,32 @@ export const Chat = ({
         socket.off('receive-chat-message', callback)
       }
 
-  }, [])
+  }, [isConnected])
+
+
+  useEffect(() => {
+    if (chatContentsEl.current){
+      chatContentsEl.current.scrollTop = chatContentsEl.current.scrollHeight
+    }
+  }, [chatHistory])
+
 
   return(
     <div className="chatContainer">
-      <div className="chatContents">
+      <div className="chatContents" ref={chatContentsEl}>
         { chatHistory.map(entry => {
           const [ messageId, message ] = entry
           return (
             <div>
-              <span>{messageId}: </span><span>{message}</span>
+              { messageId === playerId
+                ?<div className="myMessage"><span>{message}</span></div>
+                :<div className="oppMessage"><span>{message}</span></div>
+              }
             </div>
           )
         })}
       </div>
-      <form onSubmit={(e) => {
+      <form className="msgForm" onSubmit={(e) => {
         e.preventDefault()
         setChatHistory([...chatHistory, [playerId, handleChange]])
         socket.emit('chat-message', [playerId, handleChange], room)
