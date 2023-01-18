@@ -10,7 +10,7 @@ function App() {
   const socket = useRef(io('http://localhost:3000/')).current
 
   const [ gameStarted, setGameStarted ] = useState<boolean>(false)
-  const [ grid, setGrid ] = useState<string[][]>(new Array(7).fill('_').map(x => new Array(7).fill('_')))
+  const [ grid, setGrid ] = useState<string[][]>(new Array(7).fill('_').map(_ => new Array(7).fill('_')))
   const [ isConnected, setIsConnected ] = useState(socket.connected)
   const [ room, setRoom ] = useState<null | string>(null)
   const [ handleChange, setHandleChange ] = useState('')

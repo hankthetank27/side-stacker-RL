@@ -17,10 +17,13 @@ interface Props{
 
 export const Grid = ({
   gameStarted, 
-  grid,setGrid ,playerId, 
+  grid,
+  setGrid,
+  playerId, 
   currentTurn, 
   setCurrentTurn, 
-  room, socket, 
+  room,
+  socket, 
   isConnected 
 }: Props) => {
 

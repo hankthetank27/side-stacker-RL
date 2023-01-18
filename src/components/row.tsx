@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import { Box } from './box';
 import './row.css'
 
@@ -30,11 +30,11 @@ export const Row = ({
   gameOver, 
   currentPlayer, 
   setCurrentPlayer, 
-  rowId, setGrid, 
+  rowId,
+  setGrid, 
   grid,  
   gameStarted 
 }: Props) => {
-
 
   const makeAdder = (idx: number, direction: number) => {
     return () => {

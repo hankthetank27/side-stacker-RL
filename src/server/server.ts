@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 //postgres queries
-const getRoomData = async (room: string, player: string, grid: string[][]) => {
+const getRoomData = async (room: string, player: 'X'|'O') => {
   try{
     const query = `
       UPDATE rooms
@@ -56,7 +56,10 @@ const getRoomData = async (room: string, player: string, grid: string[][]) => {
       const query = `
         INSERT INTO rooms (name, boardState, playerX, currentTurn, gameStatus) 
         VALUES ($1, $2, $3, $4, $5) RETURNING playerX, playerY, currentTurn, boardState;`
-      const newRoom = await db.query(query, [room, JSON.stringify(grid), player, 'X', 'in progress'])
+      const newRoom = await db.query(
+        query,
+        [room, JSON.stringify(new Array(7).fill('_').map(_ => new Array(7).fill('_'))), player, 'X', 'in progress']
+      )
       return newRoom.rows[0]
     }
   } catch (err) {
@@ -64,7 +67,7 @@ const getRoomData = async (room: string, player: string, grid: string[][]) => {
   }
 }
 
-const insertMoveData = async (room: string, boardState: string[][], currentPlayer: string) => {
+const insertMoveData = async (room: string, boardState: string[][], currentPlayer: 'X'|'O') => {
   try {
     const query = `
       UPDATE rooms
@@ -90,7 +93,7 @@ io.on('connection', (socket: any) => {
       playerx, 
       playery, 
       boardstate 
-    } = await getRoomData(room, socket.id, grid)
+    } = await getRoomData(room, socket.id)
     callback({
       grid: JSON.parse(boardstate),
       room: room, 
@@ -102,13 +105,13 @@ io.on('connection', (socket: any) => {
     }
   })
 
-  socket.on('make-move', async (grid: string[][], currentPlayer: string, room: string) => {
+  socket.on('make-move', async (grid: string[][], currentPlayer: 'X'|'O', room: string) => {
     const { playerx, playery } = await insertMoveData(room, grid, currentPlayer)
     const currentTurn = currentPlayer === 'X' ? playerx : playery
     socket.to(room).emit('receive-move', grid, currentPlayer, currentTurn)
   })
 
-  socket.on('game-over', async (grid: string[][], winner: string, room: string) => {
+  socket.on('game-over', async (grid: string[][], winner: 'X'|'O', room: string) => {
     await insertMoveData(room, grid, winner)
     socket.to(room).emit('receive-game-over', grid, winner);
   })
