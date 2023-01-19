@@ -45,9 +45,15 @@ export const Grid = ({
         setWinner(winner)
         setGameOver(true)
       })
+
+      socket.on('receive-new-game', (newGrid: string[][], currentTurn: string) => {
+        setGameOver(false)
+        setWinner(null)
+        setGrid(newGrid)
+        setCurrentTurn(currentTurn)
+      })
     }
   }, [isConnected]);
-
 
   const rows = [];
   for (let i = 0; i < 7; i++){
@@ -86,6 +92,12 @@ export const Grid = ({
             : 'O to move'
           }
         </h3>
+          <div className='newGameContainer'>
+            {gameOver
+              ? <button onClick={() => socket.emit('new-game', winner, room)}>Play Again?</button>
+              : null
+            }
+          </div>
         { rows }
       </div>
     </div>

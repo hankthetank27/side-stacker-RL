@@ -9,7 +9,10 @@ export const Box = ({ boxId, grid }: Props) => {
   const { row, col } = boxId;
   return (
     <div className="box">
-      { grid[row][col] !== '_' ? grid[row][col] : null }
+      { grid[row][col] !== '_' 
+          ? grid[row][col] 
+          : null 
+      }
     </div>
   )
 }

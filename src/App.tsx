@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { Grid } from './components/grid'
+import { Chat } from './components/chat'
 import { RoomData } from './@types' 
 import './App.css'
 import io from 'socket.io-client'
-
 
 function App() {
 
@@ -13,7 +13,7 @@ function App() {
   const [ grid, setGrid ] = useState<string[][]>(new Array(7).fill('_').map(_ => new Array(7).fill('_')))
   const [ isConnected, setIsConnected ] = useState(socket.connected)
   const [ room, setRoom ] = useState<null | string>(null)
-  const [ handleChange, setHandleChange ] = useState('')
+  const [ handleChange, setHandleChange ] = useState<string>('')
   const [ playerId, setPlayerId ] = useState<string>('');
   const [ currentTurn, setCurrentTurn ] = useState<string>('');
 
@@ -38,7 +38,7 @@ function App() {
 
   const joinRoom = (e: any) => {
     e.preventDefault()
-    socket.emit('join-room', handleChange, grid, (roomData: RoomData) => {
+    socket.emit('join-room', handleChange, (roomData: RoomData) => {
       setGrid(roomData.grid)
       setRoom(roomData.room)
       setPlayerId(roomData.playerId)
@@ -75,6 +75,15 @@ function App() {
           ? 'You are not currently in a room'
           : `In room: ${room}`}
       </div>
+      {gameStarted
+        ? <Chat
+            socket={socket}
+            isConnected={isConnected}
+            room={room}
+            playerId={playerId}
+          />
+        : null
+      }
     </div>
   )
 }

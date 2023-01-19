@@ -30,8 +30,7 @@ export const Row = ({
   gameOver, 
   currentPlayer, 
   setCurrentPlayer, 
-  rowId,
-  setGrid, 
+  rowId, setGrid, 
   grid,  
   gameStarted 
 }: Props) => {
@@ -45,7 +44,10 @@ export const Row = ({
       }
       const newGrid = grid.map((row, i) => 
         i === rowId
-          ? row.map((el, j) => j === idx ? currentPlayer : el)
+          ? row.map((el, j) => 
+            j === idx 
+              ? currentPlayer 
+              : el)
           : row
       )
       switchTurn(newGrid)
@@ -63,7 +65,9 @@ export const Row = ({
       setGameOver(true)
       socket.emit('game-over', newGrid, currentPlayer, room)
     } else {
-      const nextPlayer = currentPlayer === 'X' ? 'O' : 'X'
+      const nextPlayer = currentPlayer === 'X' 
+        ? 'O' 
+        : 'X'
       setCurrentPlayer(nextPlayer)
       setCurrentTurn('');
       socket.emit('make-move', newGrid, nextPlayer ,room)
