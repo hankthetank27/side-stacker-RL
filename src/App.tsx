@@ -38,7 +38,7 @@ function App() {
 
   const joinRoom = (e: any) => {
     e.preventDefault()
-    socket.emit('join-room', handleChange, grid, (roomData: RoomData) => {
+    socket.emit('join-room', handleChange, (roomData: RoomData) => {
       setGrid(roomData.grid)
       setRoom(roomData.room)
       setPlayerId(roomData.playerId)
