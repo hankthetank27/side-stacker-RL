@@ -6,7 +6,9 @@ import path from 'path'
 import cors from 'cors'
 import pg from 'pg'
 import { RoomData } from '../@types';
+import dotenv from 'dotenv'
 
+dotenv.config()
 const { Pool } = pg
 const PORT = process.env.PORT || 3000
 const app = express()
@@ -21,7 +23,7 @@ const io = new Server(server, {
   allowEIO3: true
 })
 const db = new Pool({
-  connectionString: 'postgres://vjtvwlqe:anDo7eaCh4AGYWvo586XOTZrLgDlnjvs@rajje.db.elephantsql.com/vjtvwlqe'
+  connectionString: process.env.PG_DB
 })
 
 app.use(express.json())
