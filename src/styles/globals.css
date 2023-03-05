@@ -79,18 +79,6 @@ body {
     outline: 4px auto -webkit-focus-ring-color;
   }
   
-  /* @media (prefers-color-scheme: light) {
-    /* :root {
-      color: #213547;
-      background-color: #2d2525;
-    }
-    a:hover {
-      color: #747bff;
-    }
-    button {
-      background-color: #f9f9f9;
-    }
-  } */ 
   .box {
     font-size: 40px;
     border: 3px solid rgba(255, 38, 0, 0.445);
