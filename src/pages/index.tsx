@@ -4,8 +4,15 @@ import { Chat } from '../components/chat'
 import { RoomData } from '../@types' 
 import io from 'socket.io-client'
 
+const socket = io('http://localhost:3000', {
+  withCredentials: true
+})
+
 export default function Home() {
-  const socket = useRef(io('http://localhost:3000/')).current
+
+  // const socket = useRef(io('http://localhost:3000/', {
+  //   withCredentials: true
+  // })).current
 
   const [ gameStarted, setGameStarted ] = useState<boolean>(false)
   const [ grid, setGrid ] = useState<string[][]>(new Array(7).fill('_').map(_ => new Array(7).fill('_')))

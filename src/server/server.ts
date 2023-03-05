@@ -11,6 +11,7 @@ const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
+
 app
   .prepare()
   .then(() => {
@@ -19,7 +20,7 @@ app
     const server = createServer(expressApp)
     const io = new Server(server, {
       cors: {
-        origin: "*",
+        origin: "http://localhost:3000",
         methods: ['GET', 'POST'],
         credentials: true,
       },
@@ -34,16 +35,16 @@ app
     expressApp.use(express.urlencoded({ extended: true }))
     
     handleWebSockets(io, db)
-    
-    //expressApp.use((req: Request, res: Response) => res.status(404).send('page not found'));
 
     expressApp.get('/api/yoda', (req, res) => {
-      return res.json({'hello': 'ho'})
+      return res.json({'hello': 'brah'})
     })
-
+    
     expressApp.get('*', (req: Request, res: Response) => {
       return handle(req, res)
     })
+    
+    expressApp.use((req: Request, res: Response) => res.status(404).send('page not found'));
 
     server.listen(PORT, () => {
       console.log(`Server listening on port: ${PORT}.`)
