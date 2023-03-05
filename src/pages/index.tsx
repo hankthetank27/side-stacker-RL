@@ -47,31 +47,33 @@ export default function Home() {
 
   return (
     <div className="App">
-      <Grid
-        gameStarted={gameStarted}
-        setGameStarted={setGameStarted}
-        grid={grid}
-        setGrid={setGrid}
-        socket={socket}
-        isConnected={isConnected}
-        room={room}
-        playerId={playerId}
-        currentTurn={currentTurn}
-        setCurrentTurn={setCurrentTurn}
-      />
-      <form className='roomForm' onSubmit={joinRoom}>
-        <label> Enter Room To Join: 
-          <input 
-            type={'text'}
-            value={handleChange}
-            onChange={(e) => setHandleChange(e.target.value)}
-          />
-        </label>
-      </form>
-      <div>
-        {room === null
-          ? 'You are not currently in a room'
-          : `In room: ${room}`}
+      <div className='gameContainer'>
+        <Grid
+          gameStarted={gameStarted}
+          setGameStarted={setGameStarted}
+          grid={grid}
+          setGrid={setGrid}
+          socket={socket}
+          isConnected={isConnected}
+          room={room}
+          playerId={playerId}
+          currentTurn={currentTurn}
+          setCurrentTurn={setCurrentTurn}
+        />
+        <form className='roomForm' onSubmit={joinRoom}>
+          <label> Enter Room To Join: 
+            <input 
+              type={'text'}
+              value={handleChange}
+              onChange={(e) => setHandleChange(e.target.value)}
+            />
+          </label>
+        </form>
+        <div>
+          {room === null
+            ? 'You are not currently in a room'
+            : `In room: ${room}`}
+        </div>
       </div>
       {gameStarted
         ? <Chat

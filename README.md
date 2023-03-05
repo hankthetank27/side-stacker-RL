@@ -1,1 +1,1 @@
-Side Stacker is a 2 player boardgame in which players compete to align four consecutive pieces on a diagonal, column, or row. This application uses websockets to allow for real time play, game rooms, and in game chat.
+Side Stacker is a full-stack implementation of a 2 player boardgame in which players compete to align four consecutive pieces on a diagonal, column, or row. This application is built using React, Node, Postgres, and uses WebSockets to allow for real time play, seperate game rooms, and in game chat.
