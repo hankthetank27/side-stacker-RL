@@ -4,13 +4,11 @@ import { Chat } from '../components/chat'
 import { RoomData } from '../@types' 
 import io from 'socket.io-client'
 
-const socket = io('http://localhost:3000', {
-  withCredentials: true
-})
+const socket = io('http://localhost:3000')
 
 export default function Home() {
 
-  // const socket = useRef(io('http://localhost:3000/', {
+  // const socket = useRef(io('http://localhost:3000', {
   //   withCredentials: true
   // })).current
 
