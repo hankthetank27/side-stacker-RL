@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { Box } from './box';
-import './row.css'
+//import '../styles/row.css'
 
 interface Props {
   grid: string[][]

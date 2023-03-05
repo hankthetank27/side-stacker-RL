@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import './chat.css'
+//import '../styles/chat.css'
 
 interface Props{
   socket: any

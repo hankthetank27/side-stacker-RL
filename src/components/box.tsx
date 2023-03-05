@@ -1,4 +1,4 @@
-import './box.css'
+//import '../styles/box.css'
 
 interface Props{
   boxId: {[k:string]:number}

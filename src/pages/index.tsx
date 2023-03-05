@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { Grid } from './components/grid'
-import { Chat } from './components/chat'
-import { RoomData } from './@types' 
-import './App.css'
+import { Grid } from '../components/grid'
+import { Chat } from '../components/chat'
+import { RoomData } from '../@types' 
 import io from 'socket.io-client'
 
-function App() {
-
+export default function Home() {
   const socket = useRef(io('http://localhost:3000/')).current
 
   const [ gameStarted, setGameStarted ] = useState<boolean>(false)
@@ -88,4 +86,3 @@ function App() {
   )
 }
 
-export default App
